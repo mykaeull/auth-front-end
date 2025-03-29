@@ -1,11 +1,23 @@
 "use client";
 
-import { Container, Typography, TextField, Button, Box } from "@mui/material";
+import {
+    Container,
+    Typography,
+    TextField,
+    Button,
+    Box,
+    CircularProgress,
+} from "@mui/material";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/services/api/api-client";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
+
+type ErrorResponse = { message: string };
 
 const loginSchema = z.object({
     email: z.string().email("E-mail inválido"),
@@ -15,6 +27,8 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
+    const router = useRouter();
+
     const {
         register,
         handleSubmit,
@@ -29,10 +43,13 @@ export default function LoginForm() {
             return response.data;
         },
         onSuccess: (data) => {
-            console.log("Login OK:", data);
+            toast.success(`Bem-vinda, ${data.name}!`);
+            router.push("/welcome");
         },
-        onError: (error) => {
-            console.error("Erro no login:", error);
+        onError: (error: AxiosError<ErrorResponse>) => {
+            const message =
+                error.response?.data?.message || "Erro ao tentar fazer login.";
+            toast.error(message);
         },
     });
 
@@ -71,9 +88,19 @@ export default function LoginForm() {
                     variant="contained"
                     fullWidth
                     disabled={loginMutation.isPending}
-                    sx={{ mt: 2 }}
+                    sx={{
+                        mt: 2,
+                        height: 42,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
                 >
-                    Entrar
+                    {loginMutation.isPending ? (
+                        <CircularProgress size={24} sx={{ color: "#fff" }} />
+                    ) : (
+                        "Entrar"
+                    )}
                 </Button>
             </Box>
         </Container>

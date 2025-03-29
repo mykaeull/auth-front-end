@@ -4,6 +4,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
 import { CssBaseline } from "@mui/material";
 import QueryProvider from "@/providers/query-provider";
+import ToastProvider from "@/providers/toast-provider";
 
 const roboto = Roboto({
     weight: ["300", "400", "500", "700"],
@@ -21,7 +22,7 @@ export default function RootLayout(props) {
                     <QueryProvider>
                         <ThemeProvider theme={theme}>
                             <CssBaseline />
-                            {children}
+                            <ToastProvider>{children}</ToastProvider>
                         </ThemeProvider>
                     </QueryProvider>
                 </AppRouterCacheProvider>
