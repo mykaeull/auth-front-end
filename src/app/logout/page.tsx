@@ -9,7 +9,7 @@ export default function LogoutPage() {
 
     const logout = async () => {
         await fetch("/api/logout", { method: "post" }).then(() => {
-            router.replace("/");
+            router.replace("/login");
             router.refresh();
         });
     };

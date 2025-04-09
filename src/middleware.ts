@@ -1,28 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
+import { checkValidSession } from "./services/check-session";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 import { SessionData, sessionOptions } from "./lib/utils/iron-sesison";
 
 export async function middleware(request: NextRequest) {
-    const session = await getIronSession<SessionData>(
-        await cookies(),
-        sessionOptions
-    );
-    const isLoggedIn = !!session?.token;
+    const isLoggedIn = await checkValidSession();
 
-    const protectedRoutes = ["/welcome"];
+    if (
+        !isLoggedIn &&
+        (request.nextUrl.pathname === "/" ||
+            request.nextUrl.pathname === "/welcome")
+    ) {
+        return NextResponse.redirect(new URL("/login", request.url));
+    }
 
-    const isProtected = protectedRoutes.some((route) =>
-        request.nextUrl.pathname.startsWith(route)
-    );
+    if (
+        isLoggedIn &&
+        (request.nextUrl.pathname === "/" ||
+            request.nextUrl.pathname === "/login" ||
+            request.nextUrl.pathname === "/register")
+    ) {
+        const session = await getIronSession<SessionData>(
+            await cookies(),
+            sessionOptions
+        );
 
-    if (!isLoggedIn && isProtected) {
-        return NextResponse.redirect(new URL("/", request.url));
+        session.destroy();
+
+        return NextResponse.redirect(new URL("/login", request.url));
     }
 
     return NextResponse.next(); // continua normalmente
 }
 
 export const config = {
-    matcher: ["/welcome"], // você pode adicionar mais rotas privadas aqui
+    matcher: ["/", "/welcome", "/login", "/register"], // você pode adicionar mais rotas privadas aqui
 };

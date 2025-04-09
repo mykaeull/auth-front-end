@@ -8,7 +8,7 @@ const apiServer = axios.create({
     withCredentials: true, // envia cookies no backend
 });
 
-const PUBLIC_ROUTES = ["/auth/login", "/auth/register"];
+const PUBLIC_ROUTES = ["/auth/login", "/auth/register", "/scheduling"];
 
 apiServer.interceptors.request.use(
     async (config) => {

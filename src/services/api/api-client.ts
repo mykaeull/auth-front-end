@@ -10,7 +10,7 @@ apiClient.interceptors.response.use(
     (error) => {
         if (
             error.response?.status === 401 &&
-            window.location.pathname !== "/"
+            window.location.pathname !== "/login"
         ) {
             redirect("/logout");
         }

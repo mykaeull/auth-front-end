@@ -19,51 +19,69 @@ import { useRouter } from "next/navigation";
 
 type ErrorResponse = { message: string };
 
-const loginSchema = z.object({
-    email: z.string().email("E-mail inválido"),
-    password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
-});
+const registerSchema = z
+    .object({
+        name: z.string().min(2, "O nome deve ter pelo menos 2 caracteres"),
+        email: z.string().email("E-mail inválido"),
+        password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
+        confirmPassword: z.string().min(6, "Confirme sua senha"),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        path: ["confirmPassword"],
+        message: "As senhas não coincidem",
+    });
 
-type LoginFormData = z.infer<typeof loginSchema>;
+type RegisterFormData = z.infer<typeof registerSchema>;
 
-export default function LoginForm() {
+export default function RegisterForm() {
     const router = useRouter();
 
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<LoginFormData>({
-        resolver: zodResolver(loginSchema),
+    } = useForm<RegisterFormData>({
+        resolver: zodResolver(registerSchema),
     });
 
-    const loginMutation = useMutation({
-        mutationFn: async (data: LoginFormData) => {
-            const response = await apiClient.post("/api/login", data);
+    const registerMutation = useMutation({
+        mutationFn: async (data: RegisterFormData) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { confirmPassword, ...safeData } = data;
+            const response = await apiClient.post("/api/register", safeData);
             return response.data;
         },
         onSuccess: (data) => {
-            toast.success(`Bem-vinda, ${data.name}!`);
+            toast.success(`Conta criada com sucesso! Bem-vinda, ${data.name}!`);
             router.push("/welcome");
         },
         onError: (error: AxiosError<ErrorResponse>) => {
             const message =
-                error.response?.data?.message || "Erro ao tentar fazer login.";
+                error.response?.data?.message || "Erro ao tentar registrar.";
             toast.error(message);
         },
     });
 
-    const onSubmit = (data: LoginFormData) => {
-        loginMutation.mutate(data);
+    const onSubmit = (data: RegisterFormData) => {
+        registerMutation.mutate(data);
     };
 
     return (
         <Container maxWidth="xs" sx={{ mt: 8 }}>
             <Typography variant="h4" gutterBottom align="center">
-                Login
+                Criar conta
             </Typography>
 
             <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
+                <TextField
+                    fullWidth
+                    label="Nome"
+                    margin="normal"
+                    {...register("name")}
+                    error={!!errors.name}
+                    helperText={errors.name?.message}
+                />
+
                 <TextField
                     fullWidth
                     label="E-mail"
@@ -83,11 +101,21 @@ export default function LoginForm() {
                     helperText={errors.password?.message}
                 />
 
+                <TextField
+                    fullWidth
+                    type="password"
+                    label="Confirmar senha"
+                    margin="normal"
+                    {...register("confirmPassword")}
+                    error={!!errors.confirmPassword}
+                    helperText={errors.confirmPassword?.message}
+                />
+
                 <Button
                     type="submit"
                     variant="contained"
                     fullWidth
-                    disabled={loginMutation.isPending}
+                    disabled={registerMutation.isPending}
                     sx={{
                         mt: 2,
                         height: 42,
@@ -96,33 +124,12 @@ export default function LoginForm() {
                         alignItems: "center",
                     }}
                 >
-                    {loginMutation.isPending ? (
+                    {registerMutation.isPending ? (
                         <CircularProgress size={24} sx={{ color: "#fff" }} />
                     ) : (
-                        "Entrar"
+                        "Cadastrar"
                     )}
                 </Button>
-
-                {/* <Typography align="center" sx={{ mt: 2 }}>
-                    OU
-                </Typography>
-
-                <Typography
-                    onClick={() => router.push("/register")}
-                    sx={{
-                        mt: 1,
-                        width: "100%",
-                        border: "none",
-                        background: "none",
-                        color: "secondary.main",
-                        fontWeight: "bold",
-                        textDecoration: "underline",
-                        textAlign: "center",
-                        cursor: "pointer",
-                    }}
-                >
-                    Crie uma conta
-                </Typography> */}
             </Box>
         </Container>
     );
