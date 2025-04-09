@@ -48,7 +48,7 @@ const schedulingSchema = z.object({
                 const today = new Date();
                 const selected = new Date(val + "T00:00:00");
 
-                today.setHours(0, 0, 0, 0); // zera a hora de hoje
+                today.setHours(0, 0, 0, 0);
                 return selected >= today;
             },
             {
@@ -243,7 +243,11 @@ export default function SchedulingForm() {
                 <FormControl
                     fullWidth
                     margin="normal"
-                    disabled={!schedulingDate || loadingTimes}
+                    disabled={
+                        !schedulingDate ||
+                        loadingTimes ||
+                        availableTimes.length === 0
+                    }
                 >
                     <InputLabel id="time-label">Horário</InputLabel>
                     <Select
@@ -301,7 +305,14 @@ export default function SchedulingForm() {
                     fullWidth
                     type="submit"
                     variant="contained"
-                    disabled={mutation.isPending}
+                    disabled={
+                        mutation.isPending ||
+                        !!(
+                            !loadingTimes &&
+                            schedulingDate &&
+                            availableTimes.length === 0
+                        )
+                    }
                     sx={{ mt: 2 }}
                 >
                     {mutation.isPending ? (
@@ -310,6 +321,17 @@ export default function SchedulingForm() {
                         "Agendar"
                     )}
                 </Button>
+
+                {!loadingTimes &&
+                    schedulingDate &&
+                    availableTimes.length === 0 && (
+                        <Box sx={{ mt: 1, textAlign: "center" }}>
+                            <Typography variant="caption" color="warning.main">
+                                Não é mais possível realizar agendamento para a
+                                data selecionada
+                            </Typography>
+                        </Box>
+                    )}
             </Box>
 
             {/* Modal de QR Code */}
