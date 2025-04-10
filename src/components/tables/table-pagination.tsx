@@ -21,11 +21,11 @@ export const TablePagination = ({
         <MuiPagination
             component="div"
             count={itemsTotal}
-            page={page}
+            page={page - 1} // Corrige para base 0
             rowsPerPage={pageSize}
-            onPageChange={(_, newPage) => pageFilter(newPage + 1)}
+            onPageChange={(_, newPage) => pageFilter(newPage + 1)} // Volta para base 1
             onRowsPerPageChange={(e) => {
-                pageFilter(1); // sempre volta pra primeira página ao mudar o tamanho
+                pageFilter(1);
                 pageSizeFilter(+e.target.value);
             }}
             labelRowsPerPage="Itens por página"

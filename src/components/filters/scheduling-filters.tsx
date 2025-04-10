@@ -11,7 +11,7 @@ import {
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { Fragment, useEffect, useMemo } from "react";
 import { useURLParams } from "@/hooks/useURLParams";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
@@ -57,17 +57,14 @@ export const SchedulingFilters = () => {
         return (
             <>
                 {value.slice(0, limitTags).map((option, index) => (
-                    <>
-                        <Typography key={index} maxWidth="110px" noWrap>
+                    <Fragment key={option.id ?? index}>
+                        <Typography maxWidth="110px" noWrap>
                             {option.name}
                         </Typography>
-                        <Typography
-                            key={index + "-sep"}
-                            mr={index + 1 === numTags ? 0 : 1}
-                        >
+                        <Typography mr={index + 1 === numTags ? 0 : 1}>
                             {index + 1 === numTags ? "" : ","}
                         </Typography>
-                    </>
+                    </Fragment>
                 ))}
                 {numTags > limitTags && ` +${numTags - limitTags}`}
             </>
@@ -95,6 +92,11 @@ export const SchedulingFilters = () => {
                 type="date"
                 InputLabelProps={{ shrink: true }}
                 defaultValue={searchParams.get("date") || ""}
+                sx={{
+                    input: {
+                        colorScheme: "dark",
+                    },
+                }}
                 onChange={(e) => {
                     pageFilter(1);
                     dateFilter(e.target.value);
@@ -120,6 +122,7 @@ export const SchedulingFilters = () => {
                                 checkedIcon={checkedIcon}
                                 style={{ marginRight: 8 }}
                                 checked={selected}
+                                key={option.id}
                             />
                             {option.name}
                         </li>
@@ -153,6 +156,7 @@ export const SchedulingFilters = () => {
                                 checkedIcon={checkedIcon}
                                 style={{ marginRight: 8 }}
                                 checked={selected}
+                                key={option.id}
                             />
                             {option.name}
                         </li>
@@ -186,6 +190,7 @@ export const SchedulingFilters = () => {
                                 checkedIcon={checkedIcon}
                                 style={{ marginRight: 8 }}
                                 checked={selected}
+                                key={option.id}
                             />
                             {option.name}
                         </li>
