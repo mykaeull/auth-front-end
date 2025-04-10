@@ -14,7 +14,7 @@ export async function checkValidSession(): Promise<boolean> {
     try {
         await apiServer.get("/auth/me", {
             headers: {
-                Cookie: `jwt=${session.token}`,
+                Authorization: `Bearer ${session.token}`,
             },
         });
         return true;

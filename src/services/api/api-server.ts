@@ -17,8 +17,8 @@ apiServer.interceptors.request.use(
             sessionOptions
         );
 
-        const isPublicRoute = PUBLIC_ROUTES.some((route) =>
-            config.url?.startsWith(route)
+        const isPublicRoute = PUBLIC_ROUTES.some(
+            (route) => config.url === route
         );
 
         if (isPublicRoute) {

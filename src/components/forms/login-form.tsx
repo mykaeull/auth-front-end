@@ -44,7 +44,7 @@ export default function LoginForm() {
         },
         onSuccess: (data) => {
             toast.success(`Bem-vinda, ${data.name}!`);
-            router.push("/welcome");
+            router.push("/agendamentos");
         },
         onError: (error: AxiosError<ErrorResponse>) => {
             const message =

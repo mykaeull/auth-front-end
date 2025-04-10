@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest) {
     if (
         !isLoggedIn &&
         (request.nextUrl.pathname === "/" ||
-            request.nextUrl.pathname === "/welcome")
+            request.nextUrl.pathname === "/agendamentos")
     ) {
         return NextResponse.redirect(new URL("/login", request.url));
     }
@@ -35,5 +35,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/", "/welcome", "/login", "/register"], // você pode adicionar mais rotas privadas aqui
+    matcher: ["/", "/agendamentos", "/login", "/register"], // você pode adicionar mais rotas privadas aqui
 };

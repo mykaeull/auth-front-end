@@ -16,17 +16,10 @@ export async function POST(req: Request) {
 
         const response = await apiServer.post("/auth/login", body);
 
-        const user = response.data;
+        const { access_token, user } = response.data;
 
-        const jwtCookie = response.headers["set-cookie"]?.find(
-            (cookie: string) => cookie.startsWith("jwt=")
-        );
-
-        if (jwtCookie) {
-            const [cookieValue] = jwtCookie.split(";");
-            const [, token] = cookieValue.split("=");
-
-            session.token = token;
+        if (access_token) {
+            session.token = access_token;
             session.id = user.id;
             session.name = user.name;
             session.email = user.email;
