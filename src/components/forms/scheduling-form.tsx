@@ -103,6 +103,7 @@ export default function SchedulingForm({ userId }: SchedulingFormProps) {
             const res = await apiClient.get("/api/agendamento", {
                 params: {
                     date: schedulingDate,
+                    userId,
                 },
             });
             return res.data as string[];

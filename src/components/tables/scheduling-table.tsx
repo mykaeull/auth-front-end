@@ -16,6 +16,8 @@ import { TablePagination } from "./table-pagination";
 import { Scheduling } from "@/types/schedule";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/services/api/api-client";
+import { formatDate, formatPhone } from "@/lib/utils/format";
+import ConfirmPayment from "../dialogs/confirm-payment";
 
 export default function SchedulingTable() {
     const searchParams = useSearchParams();
@@ -74,15 +76,22 @@ export default function SchedulingTable() {
                             <TableCell>Horário</TableCell>
                             <TableCell>Pagamento</TableCell>
                             <TableCell>Status</TableCell>
+                            <TableCell />
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {data.items.map((row: Scheduling) => (
                             <TableRow key={row.id}>
                                 <TableCell>{row.name}</TableCell>
-                                <TableCell>{row.contact}</TableCell>
-                                <TableCell>{row.type}</TableCell>
-                                <TableCell>{row.date}</TableCell>
+                                <TableCell>
+                                    {formatPhone(row.contact)}
+                                </TableCell>
+                                <TableCell>
+                                    {row.type === "corte&barba"
+                                        ? "corte + barba"
+                                        : row.type}
+                                </TableCell>
+                                <TableCell>{formatDate(row.date)}</TableCell>
                                 <TableCell>{row.time}</TableCell>
                                 <TableCell>{row.payment_method}</TableCell>
                                 <TableCell
@@ -94,6 +103,11 @@ export default function SchedulingTable() {
                                     }}
                                 >
                                     {row.paid ? "Pago" : "Não pago"}
+                                </TableCell>
+                                <TableCell>
+                                    {!row.paid && (
+                                        <ConfirmPayment schedulingId={row.id} />
+                                    )}
                                 </TableCell>
                             </TableRow>
                         ))}

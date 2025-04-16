@@ -5,6 +5,7 @@ import { AxiosError } from "axios";
 export async function GET(req: NextRequest) {
     try {
         const date = req.nextUrl.searchParams.get("date");
+        const userId = req.nextUrl.searchParams.get("userId");
 
         if (!date) {
             return NextResponse.json(
@@ -14,7 +15,7 @@ export async function GET(req: NextRequest) {
         }
 
         const response = await apiServer.get(`/scheduling/available-times`, {
-            params: { date },
+            params: { date, userId },
         });
 
         return NextResponse.json(response.data, { status: 200 });
