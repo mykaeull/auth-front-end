@@ -1,9 +1,9 @@
 import SchedulingForm from "@/components/forms/scheduling-form";
 
 interface AgendamentoPageProps {
-    params: {
+    params: Promise<{
         userId: string;
-    };
+    }>;
 }
 
 export default async function AgendamentoPage({

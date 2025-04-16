@@ -4,7 +4,7 @@ import { AxiosError } from "axios";
 
 export async function POST(
     req: Request,
-    { params }: { params: { userId: string } }
+    { params }: { params: Promise<{ userId: string }> }
 ) {
     try {
         const body = await req.json();
