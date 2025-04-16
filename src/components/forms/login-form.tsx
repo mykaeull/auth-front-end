@@ -42,9 +42,10 @@ export default function LoginForm() {
             const response = await apiClient.post("/api/login", data);
             return response.data;
         },
-        onSuccess: (data) => {
-            toast.success(`Bem-vinda, ${data.name}!`);
+        onSuccess: () => {
+            // toast.success(`Bem-vinda, ${data.name}!`);
             router.push("/agendamentos");
+            router.refresh();
         },
         onError: (error: AxiosError<ErrorResponse>) => {
             const message =
