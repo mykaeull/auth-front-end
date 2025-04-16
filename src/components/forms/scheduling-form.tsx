@@ -65,7 +65,11 @@ const schedulingSchema = z.object({
 
 type SchedulingFormData = z.infer<typeof schedulingSchema>;
 
-export default function SchedulingForm() {
+interface SchedulingFormProps {
+    userId: string;
+}
+
+export default function SchedulingForm({ userId }: SchedulingFormProps) {
     const [showQRModal, setShowQRModal] = useState(false);
     const [schedulingDate, setSchedulingDate] = useState("");
     const dataToSubmit = useRef<SchedulingFormData | null>(null);
@@ -117,7 +121,10 @@ export default function SchedulingForm() {
                 payment_method: data.payment_method,
             };
 
-            const res = await apiClient.post("/api/agendamento", payload);
+            const res = await apiClient.post(
+                `/api/agendamento/${userId}`,
+                payload
+            );
             return res.data;
         },
         onSuccess: () => {

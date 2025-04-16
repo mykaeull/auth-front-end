@@ -85,7 +85,14 @@ export default function SchedulingTable() {
                                 <TableCell>{row.date}</TableCell>
                                 <TableCell>{row.time}</TableCell>
                                 <TableCell>{row.payment_method}</TableCell>
-                                <TableCell>
+                                <TableCell
+                                    sx={{
+                                        color: row.paid
+                                            ? "success.main"
+                                            : "error.main",
+                                        fontWeight: 600,
+                                    }}
+                                >
                                     {row.paid ? "Pago" : "Não pago"}
                                 </TableCell>
                             </TableRow>

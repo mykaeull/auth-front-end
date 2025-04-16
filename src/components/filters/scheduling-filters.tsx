@@ -11,8 +11,9 @@ import {
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { useSearchParams } from "next/navigation";
-import { Fragment, useEffect, useMemo } from "react";
+import { Fragment, useEffect, useMemo, useCallback } from "react";
 import { useURLParams } from "@/hooks/useURLParams";
+import debounce from "lodash.debounce";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -75,16 +76,21 @@ export const SchedulingFilters = () => {
     const typeOptions = useMemo(() => types, []);
     const statusOptions = useMemo(() => status, []);
 
+    const debouncedNameFilter = useCallback(
+        debounce((value: string) => {
+            pageFilter(1);
+            nameFilter(value);
+        }, 400),
+        []
+    );
+
     return (
         <Stack direction="row" spacing={2} mb={2} flexWrap="wrap">
             <TextField
                 label="Nome"
                 variant="outlined"
                 defaultValue={searchParams.get("name") || ""}
-                onChange={(e) => {
-                    pageFilter(1);
-                    nameFilter(e.target.value);
-                }}
+                onChange={(e) => debouncedNameFilter(e.target.value)}
             />
 
             <TextField

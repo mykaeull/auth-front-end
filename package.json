@@ -21,6 +21,7 @@
     "axios": "^1.8.4",
     "dayjs": "^1.11.13",
     "iron-session": "^8.0.4",
+    "lodash.debounce": "^4.0.8",
     "mui-tel-input": "^8.0.1",
     "next": "15.2.4",
     "qrcode.react": "^4.2.0",
@@ -34,6 +35,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
