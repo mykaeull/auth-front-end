@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 
 const apiServer = axios.create({
     // baseURL: "http://localhost:5000/", // ajuste se necessário
-    baseURL: "http://backend:5000",
+    baseURL: process.env.API_BASE_URL || "http://backend:5000",
     withCredentials: true,
     headers: {
         Accept: "application/json",
