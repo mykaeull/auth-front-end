@@ -1,5 +1,5 @@
+import { SchedulingFilters } from "@/components/filters/scheduling-filters/index";
 import SchedulingTable from "@/components/tables/scheduling-table";
-import { SchedulingFilters } from "@/components/filters/scheduling-filters";
 import { Stack, Typography } from "@mui/material";
 
 export default async function AgendamentosPage() {
