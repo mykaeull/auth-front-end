@@ -13,12 +13,20 @@ const apiServer = axios.create({
     },
 });
 
-const PUBLIC_ROUTES = [
-    "/auth/login",
-    "/auth/register",
-    "/scheduling",
-    "/scheduling/available-times",
-];
+const isPublicRoute = (url: string | undefined) => {
+    if (!url) return false;
+
+    const publicRoutes = [
+        "/auth/login",
+        "/auth/register",
+        "/scheduling/available-times",
+    ];
+
+    const isExactPublicRoute = publicRoutes.includes(url);
+    const isCreateScheduling = /^\/scheduling\/\d+$/.test(url); // Ex: /scheduling/1
+
+    return isExactPublicRoute || isCreateScheduling;
+};
 
 apiServer.interceptors.request.use(
     async (config) => {
@@ -27,11 +35,7 @@ apiServer.interceptors.request.use(
             sessionOptions
         );
 
-        const isPublicRoute = PUBLIC_ROUTES.some(
-            (route) => config.url === route
-        );
-
-        if (isPublicRoute) {
+        if (isPublicRoute(config.url)) {
             return config;
         }
 

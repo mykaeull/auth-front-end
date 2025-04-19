@@ -32,9 +32,27 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL("/login", request.url));
     }
 
+    if (isLoggedIn && /^\/agendamento\/[^/]+$/.test(request.nextUrl.pathname)) {
+        const session = await getIronSession<SessionData>(
+            await cookies(),
+            sessionOptions
+        );
+
+        session.destroy();
+
+        return NextResponse.redirect(new URL(request.url));
+    }
+
     return NextResponse.next();
 }
 
 export const config = {
-    matcher: ["/", "/agendamentos", "/login", "/register", "/dashboard"],
+    matcher: [
+        "/",
+        "/agendamentos",
+        "/login",
+        "/register",
+        "/dashboard",
+        "/agendamento/:id*",
+    ],
 };
