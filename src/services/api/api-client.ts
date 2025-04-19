@@ -2,7 +2,12 @@ import axios from "axios";
 import { redirect } from "next/navigation";
 
 const apiClient = axios.create({
-    withCredentials: true, // necessário para envio de cookies para `/api/...`
+    // baseURL: "http://localhost:5000",
+    withCredentials: true,
+    headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+    },
 });
 
 apiClient.interceptors.response.use(

@@ -4,8 +4,13 @@ import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 
 const apiServer = axios.create({
-    baseURL: "http://localhost:5000/", // ajuste se necessário
-    withCredentials: true, // envia cookies no backend
+    // baseURL: "http://localhost:5000/", // ajuste se necessário
+    baseURL: "http://backend:5000",
+    withCredentials: true,
+    headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+    },
 });
 
 const PUBLIC_ROUTES = [
