@@ -9,5 +9,5 @@ export async function POST() {
     );
 
     session.destroy();
-    return Response.redirect(new URL("/login", "http://localhost:3000"));
+    return Response.redirect(new URL("/login", process.env.FRONTEND_API_URL));
 }
